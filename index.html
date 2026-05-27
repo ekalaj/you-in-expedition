@@ -1,52 +1,1099 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/styles.css"> 
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <title>You In? Expeditions</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You In? Expeditions — Small-group adventures, planned for you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Manrope:wght@300..700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   YOU IN? EXPEDITIONS — shared stylesheet
+   Editorial travel-magazine design system
+   ============================================ */
+
+:root {
+  --cream: #F3EAD8;
+  --paper: #FBF7EE;
+  --ink: #1F2922;
+  --forest: #2F4A3A;
+  --forest-deep: #1B2E22;
+  --ember: #C26A3F;
+  --ember-deep: #A85628;
+  --gold: #C9A24B;
+  --muted: #6B7269;
+  --line: rgba(31, 41, 34, 0.14);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--cream);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* paper grain */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 1;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0.12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+
+.wrap { position: relative; z-index: 2; }
+
+img { max-width: 100%; display: block; }
+
+/* ============ NAV ============ */
+nav.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 48px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.brand {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  text-decoration: none;
+  color: var(--ink);
+  font-variation-settings: "SOFT" 100;
+}
+.brand .q { color: var(--ember); }
+.brand .normal { font-style: normal; }
+
+.nav-links { display: flex; gap: 36px; }
+.nav-links a {
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.25s ease;
+  position: relative;
+}
+.nav-links a:hover { color: var(--ember); }
+.nav-links a.active { color: var(--ember); }
+
+/* ============ TYPOGRAPHY HELPERS ============ */
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--forest);
+  font-weight: 600;
+  margin-bottom: 36px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.eyebrow::before {
+  content: '';
+  width: 36px;
+  height: 1px;
+  background: var(--forest);
+}
+.eyebrow.on-dark { color: var(--ember); }
+.eyebrow.on-dark::before { background: var(--ember); }
+
+.serif-em {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  color: var(--forest);
+  font-variation-settings: "SOFT" 100;
+}
+
+/* ============ HERO ============ */
+.hero {
+  padding: 80px 48px 100px;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(44px, 6.4vw, 96px);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 36px;
+  max-width: 1180px;
+  font-variation-settings: "SOFT" 50;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--forest);
+  font-variation-settings: "SOFT" 100;
+}
+.hero h1 .q { color: var(--ember); font-style: italic; }
+
+.hero-sub {
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 580px;
+  margin-bottom: 48px;
+}
+
+/* Smaller page hero (interior pages) */
+.page-hero {
+  padding: 60px 48px 80px;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+.page-hero h1 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(40px, 5.8vw, 80px);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+  margin-bottom: 24px;
+  max-width: 980px;
+  font-variation-settings: "SOFT" 50;
+}
+.page-hero h1 em { font-style: italic; color: var(--forest); font-variation-settings: "SOFT" 100; }
+.page-hero .lede {
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--muted);
+  max-width: 640px;
+}
+
+/* ============ BUTTONS ============ */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--forest);
+  color: var(--paper);
+  padding: 18px 32px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+.cta:hover { background: var(--ember); transform: translateY(-2px); }
+.cta .arrow { transition: transform 0.3s ease; display: inline-block; }
+.cta:hover .arrow { transform: translateX(4px); }
+.cta.ember { background: var(--ember); }
+.cta.ember:hover { background: var(--forest); }
+
+.link-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--forest);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid var(--forest);
+  padding-bottom: 6px;
+  transition: gap 0.3s ease;
+}
+.link-cta:hover { gap: 16px; }
+.link-cta.on-dark { color: var(--paper); border-color: rgba(251, 247, 238, 0.6); }
+.link-cta.ember { color: var(--ember); border-color: var(--ember); }
+
+/* ============ STATS STRIP ============ */
+.strip {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 36px 48px;
+  gap: 32px;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+.strip-item .num {
+  font-family: 'Fraunces', serif;
+  font-size: 38px;
+  font-weight: 300;
+  color: var(--forest);
+  font-style: italic;
+  line-height: 1;
+  margin-bottom: 8px;
+  font-variation-settings: "SOFT" 100;
+}
+.strip-item .label {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* ============ SECTIONS ============ */
+section.block { padding: 120px 48px; }
+section.block-tight { padding: 80px 48px; }
+
+.section-head {
+  max-width: 1320px;
+  margin: 0 auto 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 40px;
+}
+.section-head h2 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  max-width: 760px;
+  font-variation-settings: "SOFT" 50;
+}
+.section-head h2 em { font-style: italic; color: var(--forest); font-variation-settings: "SOFT" 100; }
+.section-head .count {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  color: var(--muted);
+  font-size: 18px;
+  white-space: nowrap;
+  padding-bottom: 10px;
+}
+
+/* ============ FEATURED TRIP CARD (homepage) ============ */
+.featured-trip {
+  max-width: 1320px;
+  margin: 0 auto;
+  background: var(--paper);
+  border-radius: 6px;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 60px -30px rgba(31, 41, 34, 0.18);
+}
+.featured-trip .photo {
+  min-height: 520px;
+  background: linear-gradient(180deg, #486B53 0%, #2F4A3A 60%, #1B2E22 100%);
+  position: relative; overflow: hidden;
+}
+.photo svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.photo .stamp {
+  position: absolute; top: 32px; right: 32px;
+  width: 110px; height: 110px;
+  border: 1px solid rgba(243, 234, 216, 0.4);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  color: var(--cream);
+  font-family: 'Fraunces', serif; font-style: italic;
+  transform: rotate(-8deg);
+  backdrop-filter: blur(2px);
+}
+.stamp .yr { font-size: 11px; letter-spacing: 0.15em; font-style: normal; text-transform: uppercase; opacity: 0.7; }
+.stamp .big { font-size: 28px; font-weight: 300; line-height: 1; margin: 2px 0; }
+
+.featured-trip .info {
+  padding: 56px 48px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.trip-meta {
+  font-size: 12px; letter-spacing: 0.18em; color: var(--ember);
+  text-transform: uppercase; margin-bottom: 24px; font-weight: 600;
+}
+.trip-info h3 {
+  font-family: 'Fraunces', serif; font-weight: 300;
+  font-size: clamp(32px, 3.4vw, 46px); line-height: 1.05;
+  letter-spacing: -0.02em; margin-bottom: 20px;
+  font-variation-settings: "SOFT" 50;
+}
+.trip-info h3 em { font-style: italic; color: var(--forest); }
+.trip-info p { color: var(--muted); margin-bottom: 32px; font-size: 16px; }
+
+.trip-details {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px;
+  padding-top: 32px; border-top: 1px solid var(--line); margin-bottom: 36px;
+}
+.detail .k {
+  font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 6px; font-weight: 500;
+}
+.detail .v {
+  font-family: 'Fraunces', serif; font-size: 22px; font-weight: 300;
+  color: var(--ink); font-variation-settings: "SOFT" 50;
+}
+
+/* ============ TRIPS GRID (upcoming-expeditions) ============ */
+.trips-grid {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+}
+.trip-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.trip-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px -30px rgba(31, 41, 34, 0.22);
+}
+.trip-card .photo {
+  height: 320px;
+  position: relative;
+  overflow: hidden;
+}
+.trip-card .photo svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.trip-card .photo .stamp {
+  position: absolute; top: 24px; right: 24px;
+  width: 90px; height: 90px;
+  border: 1px solid rgba(243, 234, 216, 0.4);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  color: var(--cream);
+  font-family: 'Fraunces', serif; font-style: italic;
+  transform: rotate(-8deg);
+}
+.trip-card .photo .stamp .yr { font-size: 10px; letter-spacing: 0.15em; font-style: normal; text-transform: uppercase; opacity: 0.7; }
+.trip-card .photo .stamp .big { font-size: 22px; font-weight: 300; line-height: 1; margin: 2px 0; }
+.trip-card .info { padding: 36px 32px; display: flex; flex-direction: column; flex: 1; }
+.trip-card .trip-meta { margin-bottom: 16px; }
+.trip-card h3 {
+  font-family: 'Fraunces', serif; font-weight: 300;
+  font-size: 32px; line-height: 1.05; letter-spacing: -0.02em;
+  margin-bottom: 14px; font-variation-settings: "SOFT" 50;
+}
+.trip-card h3 em { font-style: italic; color: var(--forest); }
+.trip-card .desc { color: var(--muted); margin-bottom: 24px; font-size: 15px; flex: 1; }
+.trip-card .mini-details {
+  display: flex; gap: 24px; flex-wrap: wrap;
+  padding-top: 20px; border-top: 1px solid var(--line); margin-bottom: 24px;
+}
+.mini-details .md-item .k {
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 4px;
+}
+.mini-details .md-item .v {
+  font-family: 'Fraunces', serif; font-size: 17px;
+  font-weight: 400; color: var(--ink);
+}
+.trip-card .link-cta { align-self: flex-start; }
+
+.status-badge {
+  position: absolute; top: 24px; left: 24px;
+  background: var(--cream); color: var(--ink);
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  font-weight: 600; padding: 6px 14px; border-radius: 999px;
+}
+.status-badge.full { background: var(--ink); color: var(--paper); }
+.status-badge.few { background: var(--ember); color: var(--paper); }
+
+/* ============ DARK SECTION (Meet Elda etc) ============ */
+.dark-section {
+  background: var(--forest-deep);
+  color: var(--paper);
+  padding: 140px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.dark-section::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, var(--ember) 0%, transparent 70%);
+  opacity: 0.15;
+}
+.dark-section-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 80px;
+  align-items: center;
+  position: relative;
+}
+.dark-section h2 {
+  font-family: 'Fraunces', serif; font-weight: 300;
+  font-size: clamp(40px, 5.6vw, 76px); line-height: 1.02;
+  letter-spacing: -0.025em; font-variation-settings: "SOFT" 50;
+}
+.dark-section h2 em { font-style: italic; color: var(--ember); font-variation-settings: "SOFT" 100; }
+.dark-section p { font-size: 18px; line-height: 1.7; margin-bottom: 22px; color: rgba(251, 247, 238, 0.82); }
+
+/* ============ STEPS (How It Works) ============ */
+.steps {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+.step { border-top: 1px solid var(--line); padding-top: 36px; }
+.step .stepnum {
+  font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+  font-size: 64px; color: var(--ember); line-height: 1; margin-bottom: 32px;
+  font-variation-settings: "SOFT" 100;
+}
+.step h4 {
+  font-family: 'Fraunces', serif; font-weight: 400;
+  font-size: 24px; margin-bottom: 14px; letter-spacing: -0.01em;
+  font-variation-settings: "SOFT" 50;
+}
+.step p { color: var(--muted); font-size: 15px; line-height: 1.6; }
+
+/* Detailed Steps (how-it-works page) */
+.steps-detailed {
+  max-width: 980px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.step-detailed {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 48px;
+  padding: 48px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: start;
+}
+.step-detailed:first-child { border-top: 1px solid var(--line); }
+.step-detailed .num {
+  font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+  font-size: 72px; color: var(--ember); line-height: 0.9;
+  font-variation-settings: "SOFT" 100;
+}
+.step-detailed h3 {
+  font-family: 'Fraunces', serif; font-weight: 400;
+  font-size: 32px; margin-bottom: 16px; letter-spacing: -0.01em;
+  font-variation-settings: "SOFT" 50;
+}
+.step-detailed p { color: var(--muted); font-size: 17px; line-height: 1.65; margin-bottom: 12px; max-width: 680px; }
+.step-detailed .micro { font-size: 13px; color: var(--forest); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 12px; }
+
+/* ============ PAST TRIP MOMENTS ============ */
+.moments-grid {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.moment {
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 32px;
+  color: var(--paper);
+  border: 1px solid var(--line);
+}
+.moment::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 30%, rgba(27, 46, 34, 0.85) 100%);
+  z-index: 1;
+}
+.moment svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.moment .content { position: relative; z-index: 2; }
+.moment .loc {
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ember); font-weight: 600; margin-bottom: 12px;
+}
+.moment .quote {
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-weight: 300; font-size: 22px; line-height: 1.3;
+  letter-spacing: -0.01em;
+  font-variation-settings: "SOFT" 100;
+}
+.moment .who { font-size: 13px; margin-top: 14px; opacity: 0.8; }
+
+/* ============ FAQs ============ */
+.faq-list { max-width: 920px; margin: 0 auto; border-top: 1px solid var(--line); }
+.faq-item { border-bottom: 1px solid var(--line); padding: 30px 0; }
+.faq-item summary {
+  font-family: 'Fraunces', serif; font-weight: 400;
+  font-size: 24px; letter-spacing: -0.01em;
+  cursor: pointer; list-style: none;
+  display: flex; justify-content: space-between; align-items: center; gap: 24px;
+  font-variation-settings: "SOFT" 50;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: '+'; font-family: 'Fraunces', serif; font-size: 36px; font-weight: 300;
+  color: var(--forest); transition: transform 0.3s ease; line-height: 1;
+}
+.faq-item[open] summary::after { transform: rotate(45deg); }
+.faq-item p {
+  margin-top: 18px; color: var(--muted);
+  font-size: 16px; line-height: 1.65; max-width: 680px;
+}
+
+.faq-group { max-width: 920px; margin: 0 auto 60px; }
+.faq-group h3 {
+  font-family: 'Fraunces', serif; font-weight: 400; font-style: italic;
+  font-size: 20px; color: var(--ember); letter-spacing: 0.02em;
+  margin-bottom: 24px; font-variation-settings: "SOFT" 100;
+}
+
+/* ============ EXPEDITION DETAIL PAGE ============ */
+.detail-hero {
+  position: relative;
+  height: 560px;
+  background: linear-gradient(180deg, #486B53 0%, #2F4A3A 60%, #1B2E22 100%);
+  overflow: hidden;
+  margin-bottom: 0;
+}
+.detail-hero svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.detail-hero .hero-text {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 60px 48px;
+  background: linear-gradient(180deg, transparent 0%, rgba(27, 46, 34, 0.92) 100%);
+  z-index: 2;
+  color: var(--paper);
+}
+.detail-hero .hero-inner { max-width: 1320px; margin: 0 auto; }
+.detail-hero .crumb {
+  font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ember); font-weight: 600; margin-bottom: 16px;
+}
+.detail-hero h1 {
+  font-family: 'Fraunces', serif; font-weight: 300;
+  font-size: clamp(40px, 5.6vw, 76px); line-height: 1.02;
+  letter-spacing: -0.025em; max-width: 900px;
+  font-variation-settings: "SOFT" 50;
+}
+.detail-hero h1 em { font-style: italic; color: var(--ember); font-variation-settings: "SOFT" 100; }
+
+.detail-meta-strip {
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 32px 48px;
+  gap: 24px;
+  max-width: 1320px;
+  margin: 0 auto;
+  background: var(--paper);
+}
+.detail-meta-strip .strip-item .num { font-size: 28px; }
+
+.detail-body {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 80px 48px;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.detail-main h2 {
+  font-family: 'Fraunces', serif; font-weight: 300;
+  font-size: clamp(28px, 3vw, 40px); line-height: 1.1;
+  letter-spacing: -0.015em; margin-bottom: 24px;
+  margin-top: 56px;
+  font-variation-settings: "SOFT" 50;
+}
+.detail-main h2:first-child { margin-top: 0; }
+.detail-main h2 em { font-style: italic; color: var(--forest); }
+.detail-main p { color: var(--ink); font-size: 17px; line-height: 1.7; margin-bottom: 16px; }
+.detail-main p.lede { font-size: 20px; line-height: 1.6; color: var(--ink); }
+
+.itinerary { margin-top: 16px; }
+.day {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 28px;
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+  align-items: start;
+}
+.day:last-child { border-bottom: 1px solid var(--line); }
+.day .daynum {
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-size: 14px; color: var(--ember);
+  letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600;
+  padding-top: 4px;
+}
+.day h4 {
+  font-family: 'Fraunces', serif; font-weight: 400;
+  font-size: 20px; margin-bottom: 6px;
+  font-variation-settings: "SOFT" 50;
+}
+.day p { color: var(--muted); font-size: 15px; line-height: 1.6; margin-bottom: 0; }
+
+.includes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  margin-top: 24px;
+}
+.inc-col h3 {
+  font-family: 'Fraunces', serif; font-style: italic; font-weight: 400;
+  font-size: 18px; color: var(--forest);
+  margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--line);
+  font-variation-settings: "SOFT" 100;
+}
+.inc-col.not h3 { color: var(--muted); }
+.inc-col ul { list-style: none; padding: 0; }
+.inc-col li {
+  font-size: 15px; line-height: 1.5;
+  padding: 10px 0;
+  color: var(--ink);
+  display: flex; gap: 10px;
+}
+.inc-col li::before {
+  content: '+';
+  color: var(--ember);
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1;
+}
+.inc-col.not li::before { content: '—'; color: var(--muted); }
+
+/* Sticky booking sidebar */
+.book-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 36px 32px;
+  position: sticky;
+  top: 32px;
+  box-shadow: 0 20px 40px -20px rgba(31, 41, 34, 0.15);
+}
+.book-card .price-label {
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); font-weight: 500; margin-bottom: 6px;
+}
+.book-card .price {
+  font-family: 'Fraunces', serif; font-weight: 300;
+  font-size: 44px; color: var(--ink);
+  line-height: 1; margin-bottom: 4px;
+  font-variation-settings: "SOFT" 50;
+}
+.book-card .price-note { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+.book-card .book-details {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 20px 0;
+  margin-bottom: 24px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.book-card .bd-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 14px;
+}
+.book-card .bd-row .k { color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px; }
+.book-card .bd-row .v { font-family: 'Fraunces', serif; font-size: 16px; color: var(--ink); }
+.book-card .cta { width: 100%; justify-content: center; margin-bottom: 12px; }
+.book-card .deposit-note {
+  font-size: 12px; color: var(--muted);
+  text-align: center; line-height: 1.5; margin-top: 8px;
+}
+
+/* ============ ABOUT PAGE ============ */
+.about-hero {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 60px 48px 100px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+  align-items: center;
+}
+.about-portrait {
+  aspect-ratio: 4 / 5;
+  background: linear-gradient(135deg, #486B53 0%, #2F4A3A 60%, #1B2E22 100%);
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 30px 60px -30px rgba(31, 41, 34, 0.3);
+}
+.about-portrait svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.about-portrait .signature {
+  position: absolute; bottom: 32px; left: 32px; right: 32px;
+  color: var(--cream);
+  font-family: 'Fraunces', serif; font-style: italic;
+  z-index: 2;
+}
+.about-portrait .signature .sig-name {
+  font-size: 42px; font-weight: 300; line-height: 1;
+  font-variation-settings: "SOFT" 100;
+}
+.about-portrait .signature .sig-role {
+  font-size: 13px; letter-spacing: 0.15em;
+  text-transform: uppercase; font-style: normal;
+  margin-top: 10px; opacity: 0.8; font-weight: 500;
+}
+
+.about-text h1 {
+  font-family: 'Fraunces', serif; font-weight: 300;
+  font-size: clamp(40px, 5vw, 64px); line-height: 1.02;
+  letter-spacing: -0.025em; margin-bottom: 28px;
+  font-variation-settings: "SOFT" 50;
+}
+.about-text h1 em { font-style: italic; color: var(--forest); font-variation-settings: "SOFT" 100; }
+.about-text p { font-size: 18px; line-height: 1.7; margin-bottom: 20px; color: var(--ink); }
+.about-text p.lede { font-size: 22px; color: var(--ink); font-family: 'Fraunces', serif; font-weight: 300; line-height: 1.4; font-variation-settings: "SOFT" 50; }
+
+.values-grid {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+}
+.value h3 {
+  font-family: 'Fraunces', serif; font-weight: 400; font-style: italic;
+  font-size: 28px; color: var(--forest); margin-bottom: 14px;
+  font-variation-settings: "SOFT" 100;
+}
+.value p { color: var(--muted); font-size: 16px; line-height: 1.6; }
+.value .value-num {
+  font-family: 'Fraunces', serif; font-style: italic;
+  color: var(--ember); font-size: 16px; margin-bottom: 18px; display: block;
+}
+
+/* ============ BANNER CTA ============ */
+.banner-cta {
+  background: var(--ember);
+  color: var(--paper);
+  padding: 100px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.banner-cta::before {
+  content: '"';
+  position: absolute; top: -40px; left: 50%;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 400px;
+  opacity: 0.08;
+  transform: translateX(-50%);
+  line-height: 1;
+}
+.banner-cta h2 {
+  font-family: 'Fraunces', serif; font-weight: 300;
+  font-size: clamp(36px, 5vw, 60px); line-height: 1.08;
+  letter-spacing: -0.02em; margin-bottom: 24px;
+  max-width: 880px; margin-left: auto; margin-right: auto;
+  position: relative;
+  font-variation-settings: "SOFT" 50;
+}
+.banner-cta h2 em { font-style: italic; }
+.banner-cta p {
+  font-size: 18px; opacity: 0.9; margin-bottom: 36px;
+  max-width: 620px; margin-left: auto; margin-right: auto;
+  position: relative;
+}
+.banner-cta .cta {
+  background: var(--ink); color: var(--paper);
+  position: relative;
+}
+.banner-cta .cta:hover { background: var(--paper); color: var(--ink); }
+
+/* ============ FOOTER ============ */
+footer.site-footer {
+  border-top: 1px solid var(--line);
+  padding: 48px;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+footer.site-footer .footer-top {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 60px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 28px;
+}
+footer.site-footer .foot-brand { font-size: 28px; margin-bottom: 16px; display: block; }
+footer.site-footer .foot-tag { color: var(--muted); font-size: 15px; max-width: 320px; line-height: 1.5; }
+footer.site-footer .foot-col h4 {
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--forest); font-weight: 700; margin-bottom: 16px;
+}
+footer.site-footer .foot-col a {
+  display: block; color: var(--ink);
+  text-decoration: none; font-size: 14px;
+  padding: 5px 0; transition: color 0.2s ease;
+}
+footer.site-footer .foot-col a:hover { color: var(--ember); }
+footer.site-footer .foot-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; color: var(--muted); letter-spacing: 0.04em;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 980px) {
+  nav.top { padding: 24px; flex-wrap: wrap; gap: 16px; }
+  .nav-links { gap: 20px; font-size: 11px; }
+  .hero, .page-hero { padding: 48px 24px 72px; }
+  section.block { padding: 80px 24px; }
+  section.block-tight { padding: 56px 24px; }
+  .strip { grid-template-columns: repeat(2, 1fr); padding: 28px 24px; gap: 24px; }
+  .section-head { flex-direction: column; align-items: flex-start; margin-bottom: 40px; }
+  .featured-trip { grid-template-columns: 1fr; }
+  .featured-trip .photo { min-height: 320px; }
+  .featured-trip .info { padding: 36px 28px; }
+  .dark-section { padding: 80px 24px; }
+  .dark-section-inner { grid-template-columns: 1fr; gap: 32px; }
+  .steps { grid-template-columns: 1fr 1fr; gap: 36px; }
+  .trips-grid { grid-template-columns: 1fr; gap: 32px; }
+  .moments-grid { grid-template-columns: 1fr 1fr; }
+  .about-hero { grid-template-columns: 1fr; gap: 48px; padding: 40px 24px 60px; }
+  .values-grid { grid-template-columns: 1fr; gap: 32px; }
+  .detail-body { grid-template-columns: 1fr; gap: 48px; padding: 56px 24px; }
+  .detail-hero { height: auto; min-height: 420px; }
+  .detail-hero .hero-text { padding: 40px 24px; }
+  .detail-meta-strip { grid-template-columns: repeat(2, 1fr); padding: 24px; }
+  .includes-grid { grid-template-columns: 1fr; gap: 32px; }
+  .step-detailed { grid-template-columns: 1fr; gap: 16px; padding: 36px 0; }
+  .step-detailed .num { font-size: 56px; }
+  .banner-cta { padding: 64px 24px; }
+  footer.site-footer { padding: 32px 24px; }
+  footer.site-footer .footer-top { grid-template-columns: 1fr; gap: 28px; }
+  footer.site-footer .foot-bottom { flex-direction: column; gap: 16px; text-align: center; }
+}
+
+@media (max-width: 560px) {
+  .steps { grid-template-columns: 1fr; }
+  .trip-details, .mini-details { grid-template-columns: 1fr 1fr; gap: 18px; }
+  .moments-grid { grid-template-columns: 1fr; }
+  .day { grid-template-columns: 1fr; gap: 8px; }
+}
+
+</style>
 </head>
 <body>
-    <header>
-        <h1>Small-group adventures for people who are ready to say, “You in?”</h1>
-        <h2>Curated trips, real connection, and unforgettable places — without the stress of planning every detail yourself.</h2>
-        <a href="upcoming-expeditions.html" class="cta-button">Ready for your next adventure? Send us a message!</a>
-    </header>
-    
-    <main>
-        <section id="upcoming-expeditions">
-            <h3>Upcoming Expeditions</h3>
-            <!-- Example expeditions should go here -->
-        </section>
-        
-        <section id="meet-elda">
-            <h3>Meet Elda</h3>
-            <p>A brief introduction to Elda and her mission...</p>
-            <a href="about-elda.html">Learn More</a>
-        </section>
+<div class="wrap">
 
-        <section id="how-it-works">
-            <h3>How It Works</h3>
-            <p>A brief overview of the process...</p>
-            <a href="how-it-works.html">Discover More</a>
-        </section>
+<nav class="top">
+  <a href="index.html" class="brand">you in<span class="q">?</span> <span class="normal">expeditions</span></a>
+  <div class="nav-links">
+    <a href="upcoming-expeditions.html">Trips</a>
+    <a href="about-elda.html">About</a>
+    <a href="how-it-works.html">How it Works</a>
+    <a href="faqs.html">FAQs</a>
+  </div>
+</nav>
 
-        <section id="past-trip-moments">
-            <h3>Past Trip Moments</h3>
-            <p>Highlight unforgettable experiences from previous trips.</p>
-        </section>
+<!-- HERO -->
+<section class="hero">
+  <div class="eyebrow">Small-group expeditions · Est. 2024</div>
+  <h1>Curated trips for travelers who are ready to say, <em>"you in<span class="q">?"</span></em></h1>
+  <p class="hero-sub">Real places, real connection, and a little adventure &mdash; without the stress of planning every detail yourself.</p>
+  <a href="upcoming-expeditions.html" class="cta">See upcoming trips <span class="arrow">→</span></a>
+</section>
 
-        <section id="faqs">
-            <h3>FAQs</h3>
-            <p>Find answers to common questions.</p>
-            <a href="faqs.html">Visit FAQs</a>
-        </section>
-    </main>
+<!-- STATS STRIP -->
+<div class="strip">
+  <div class="strip-item"><div class="num">6–12</div><div class="label">travelers per trip</div></div>
+  <div class="strip-item"><div class="num">100%</div><div class="label">planned for you</div></div>
+  <div class="strip-item"><div class="num">All</div><div class="label">comfort levels</div></div>
+  <div class="strip-item"><div class="num">Solo</div><div class="label">travelers welcome</div></div>
+</div>
 
-    <footer>
-        <p>&copy; 2026 You In? Expeditions</p>
-    </footer>
-    <script src="js/script.js"></script>
+<!-- FEATURED TRIP -->
+<section class="block" id="trips">
+  <div class="section-head">
+    <h2>Upcoming <em>expeditions</em></h2>
+    <div class="count">04 trips currently open</div>
+  </div>
+  <div class="featured-trip">
+    <div class="photo">
+      <svg class="scene" viewBox="0 0 600 520" preserveAspectRatio="xMidYMid slice">
+        <circle cx="460" cy="140" r="48" fill="#C26A3F" opacity="0.9"/>
+        <path d="M0,520 L0,300 Q60,250 130,280 Q190,230 260,270 Q320,210 380,260 Q440,200 510,250 Q560,220 600,260 L600,520 Z" fill="#3A5642" opacity="0.55"/>
+        <path d="M0,520 L0,360 Q80,320 160,350 Q230,300 310,340 Q380,290 460,330 Q530,300 600,340 L600,520 Z" fill="#2F4A3A" opacity="0.75"/>
+        <path d="M0,520 L0,410 Q90,380 180,400 Q260,365 340,395 Q420,360 500,390 Q560,370 600,395 L600,520 Z" fill="#1B2E22"/>
+        <g fill="#1B2E22" opacity="0.85">
+          <path d="M70,520 Q72,440 80,400 Q88,380 95,400 Q90,420 88,440 Q108,420 130,425 Q110,432 92,448 Q108,460 122,465 Q102,468 86,470 Q82,495 78,520 Z"/>
+        </g>
+      </svg>
+      <div class="stamp">
+        <div class="yr">Mar</div>
+        <div class="big">12—19</div>
+        <div class="yr">2026</div>
+      </div>
+    </div>
+    <div class="info">
+      <div>
+        <div class="trip-meta">Costa Rica · 7 nights · Next up</div>
+        <div class="trip-info">
+          <h3>Rainforest <em>&amp;</em> Coast</h3>
+          <p>A week moving between lush rainforest, local villages, and laid-back coastlines. Designed for travelers who want adventure, connection, and a little room to breathe.</p>
+        </div>
+        <div class="trip-details">
+          <div class="detail"><div class="k">From</div><div class="v">$1,200</div></div>
+          <div class="detail"><div class="k">Spots left</div><div class="v">8</div></div>
+          <div class="detail"><div class="k">Pace</div><div class="v">Moderate</div></div>
+          <div class="detail"><div class="k">Group size</div><div class="v">8–10</div></div>
+        </div>
+      </div>
+      <a href="expedition-detail.html" class="link-cta">View expedition →</a>
+    </div>
+  </div>
+  <div style="text-align: center; margin-top: 48px;">
+    <a href="upcoming-expeditions.html" class="link-cta">See all 4 upcoming trips →</a>
+  </div>
+</section>
+
+<!-- MEET ELDA -->
+<section class="dark-section">
+  <div class="dark-section-inner">
+    <div>
+      <div class="eyebrow on-dark">Meet your guide</div>
+      <h2>Hi, I'm <em>Elda</em>.</h2>
+    </div>
+    <div>
+      <p>I created You In? for people who want more than a standard vacation &mdash; the kind of travel where you come home with stories, new friends, and a clearer sense of what you're capable of.</p>
+      <p>I handle the planning, the details, and the local coordination. You show up, join in, and enjoy.</p>
+      <a href="about-elda.html" class="link-cta on-dark" style="margin-top: 20px;">More about Elda →</a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="block" id="how">
+  <div class="section-head">
+    <h2>How it <em>works</em></h2>
+    <a href="how-it-works.html" class="link-cta">Full breakdown →</a>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="stepnum">01</div><h4>Pick a trip</h4><p>Browse upcoming expeditions and find one that fits your schedule and travel style.</p></div>
+    <div class="step"><div class="stepnum">02</div><h4>Apply</h4><p>Send a quick inquiry so Elda can make sure the trip is the right fit for you.</p></div>
+    <div class="step"><div class="stepnum">03</div><h4>Save your spot</h4><p>Once approved, place your deposit and get access to the full trip details.</p></div>
+    <div class="step"><div class="stepnum">04</div><h4>Show up</h4><p>Arrive with packing tips and travel notes already in your inbox. The rest is taken care of.</p></div>
+  </div>
+</section>
+
+<!-- PAST TRIP MOMENTS -->
+<section class="block" id="moments" style="background: var(--paper);">
+  <div class="section-head">
+    <h2>Moments from <em>past trips</em></h2>
+    <div class="count">Real travelers, real trips</div>
+  </div>
+  <div class="moments-grid">
+    <div class="moment">
+      <svg class="scene" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+        <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5A8470"/><stop offset="100%" stop-color="#2F4A3A"/></linearGradient></defs>
+        <rect width="400" height="400" fill="url(#g1)"/>
+        <circle cx="320" cy="80" r="40" fill="#F3EAD8" opacity="0.5"/>
+        <path d="M0,400 L0,260 Q80,220 160,250 Q240,200 320,240 Q380,220 400,250 L400,400 Z" fill="#1B2E22" opacity="0.85"/>
+      </svg>
+      <div class="content">
+        <div class="loc">Patagonia · 2024</div>
+        <div class="quote">"By day three, the group felt like people I'd known for years."</div>
+        <div class="who">— Maya R., solo traveler</div>
+      </div>
+    </div>
+    <div class="moment">
+      <svg class="scene" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+        <defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#D4956A"/><stop offset="100%" stop-color="#A85628"/></linearGradient></defs>
+        <rect width="400" height="400" fill="url(#g2)"/>
+        <circle cx="80" cy="100" r="50" fill="#F3EAD8" opacity="0.4"/>
+        <path d="M0,400 L0,300 Q100,260 200,290 Q300,250 400,280 L400,400 Z" fill="#5A3618" opacity="0.7"/>
+      </svg>
+      <div class="content">
+        <div class="loc">Morocco · 2025</div>
+        <div class="quote">"Elda thinks of everything so you don't have to."</div>
+        <div class="who">— Dana K., second-time traveler</div>
+      </div>
+    </div>
+    <div class="moment">
+      <svg class="scene" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+        <defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7A9590"/><stop offset="100%" stop-color="#1F3528"/></linearGradient></defs>
+        <rect width="400" height="400" fill="url(#g3)"/>
+        <path d="M0,400 L0,220 Q60,180 120,210 Q180,160 240,200 Q300,150 360,190 Q400,170 400,200 L400,400 Z" fill="#2F4A3A" opacity="0.8"/>
+        <path d="M0,400 L0,310 Q100,280 200,300 Q300,270 400,300 L400,400 Z" fill="#1B2E22"/>
+      </svg>
+      <div class="content">
+        <div class="loc">Iceland · 2025</div>
+        <div class="quote">"The pace was perfect — adventurous, but never rushed."</div>
+        <div class="who">— James &amp; Tom, friend trip</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQs -->
+<section class="block" id="faqs">
+  <div class="section-head">
+    <h2>Common <em>questions</em></h2>
+    <a href="faqs.html" class="link-cta">All FAQs →</a>
+  </div>
+  <div class="faq-list">
+    <details class="faq-item"><summary>Do I need to travel with someone?</summary><p>Nope. Many travelers come solo &mdash; the trips are built to feel welcoming from the start.</p></details>
+    <details class="faq-item"><summary>Are flights included?</summary><p>Usually not, unless stated on the trip page. You'll book your own flights so you have flexibility on dates and departure city.</p></details>
+    <details class="faq-item"><summary>How many people are on each trip?</summary><p>Small groups, usually 6&ndash;12 travelers. Big enough for connection, small enough to feel personal.</p></details>
+    <details class="faq-item"><summary>Do I need experience?</summary><p>It depends on the trip. Each expedition page lists comfort level, activity level, and what to expect &mdash; most are designed for first-time adventure travelers.</p></details>
+    <details class="faq-item"><summary>Can I pay a deposit?</summary><p>Yes. Each trip offers a deposit option with a clear payment schedule and final payment deadline.</p></details>
+  </div>
+</section>
+
+<!-- BANNER CTA -->
+<section class="banner-cta">
+  <h2>Ready for your <em>next adventure?</em></h2>
+  <p>Send a quick note and Elda will get back to you with a recommendation that actually fits.</p>
+  <a href="mailto:hello@youinexpeditions.com" class="cta">Start a conversation <span class="arrow">→</span></a>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <div>
+      <a href="index.html" class="brand foot-brand">you in<span class="q">?</span> <span class="normal">expeditions</span></a>
+      <p class="foot-tag">Small-group adventures for travelers ready to say yes &mdash; planned and led so you can just show up.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Explore</h4>
+      <a href="upcoming-expeditions.html">Upcoming Trips</a>
+      <a href="how-it-works.html">How it Works</a>
+      <a href="about-elda.html">About Elda</a>
+      <a href="faqs.html">FAQs</a>
+    </div>
+    <div class="foot-col">
+      <h4>Get in touch</h4>
+      <a href="mailto:hello@youinexpeditions.com">hello@youinexpeditions.com</a>
+      <a href="#">Instagram</a>
+      <a href="#">Join the trip list</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div>© 2026 You In? Expeditions</div>
+    <div>All trips, all yours.</div>
+  </div>
+</footer>
+
+</div>
 </body>
 </html>
