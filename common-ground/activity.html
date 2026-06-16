@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity — Common Ground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <span class="logo" aria-hidden="true">◐</span>
+      <span>Common Ground<small>Close to home</small></span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
+    <nav class="nav-links" id="nav-links" aria-label="Main">
+      <a href="browse.html">Find Activities</a>
+      <a href="post.html">Post an Activity</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="signup.html" data-auth-slot>Sign in</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+  <p class="breadcrumb"><a href="browse.html">← Back to all activities</a></p>
+  <div id="content"></div>
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="copyright">© 2026 Common Ground (working name) · This is an early prototype.</div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+function render() {
+  const id = qs('id');
+  const a = getActivity(id);
+  const content = document.getElementById('content');
+  if (!a) {
+    content.innerHTML = `<div class="empty" style="margin:40px 0"><div class="big">🤔</div><p>We couldn't find that activity. It may have been removed.</p><p style="margin-top:14px"><a class="btn btn-primary" href="browse.html">Browse activities</a></p></div>`;
+    return;
+  }
+  const cat = categoryById(a.category);
+  const spots = spotsLabel(a);
+  const joined = isJoined(a);
+  const full = a.attendees.length >= a.capacity;
+
+  content.innerHTML = `
+    <div class="detail-head ${cat.cls}">
+      <span class="ico" aria-hidden="true">${cat.icon}</span>
+      <div>
+        <div class="cat">${cat.name}</div>
+        <h1>${a.title}</h1>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div>
+        <ul class="fact-list">
+          <li><span class="fi" aria-hidden="true">📅</span><span><span class="fk">When</span>${formatDate(a.date)} at ${a.time}</span></li>
+          <li><span class="fi" aria-hidden="true">📍</span><span><span class="fk">Where</span>${a.place}<br>${a.area}</span></li>
+          <li><span class="fi" aria-hidden="true">👤</span><span><span class="fk">Hosted by</span>${a.host}</span></li>
+        </ul>
+
+        <h2 style="margin:30px 0 12px">About this get-together</h2>
+        <div class="prose"><p>${a.description}</p></div>
+
+        <h2 style="margin:30px 0 12px">Who's coming (${a.attendees.length})</h2>
+        <div class="attendees">
+          ${a.attendees.map(n => `<span class="who"><span class="avatar">${initials(n)}</span>${n}</span>`).join('')}
+        </div>
+      </div>
+
+      <aside>
+        <div class="side-card">
+          <div class="spots-big ${spots.cls === 'few' ? 'few' : ''}" style="${spots.cls==='few'?'color:var(--terra)':''}">${spots.text}</div>
+          <p style="color:var(--muted);margin-bottom:6px">${a.attendees.length} of ${a.capacity} spots filled</p>
+
+          <div class="host-line">
+            <span class="avatar">${initials(a.host)}</span>
+            <div><strong>${a.host}</strong><br><span style="color:var(--muted);font-size:16px">Host</span></div>
+          </div>
+
+          <button id="joinBtn" class="btn btn-block ${joined ? 'btn-outline' : 'btn-primary'} btn-lg">
+            ${joined ? '✓ You\'re going — tap to cancel' : (full ? 'This activity is full' : 'Join this activity')}
+          </button>
+          ${full && !joined ? '' : ''}
+          <p style="color:var(--muted);font-size:16px;margin-top:14px;text-align:center">Free to join while you're a member.</p>
+        </div>
+      </aside>
+    </div>
+  `;
+
+  const btn = document.getElementById('joinBtn');
+  if (full && !joined) { btn.disabled = true; btn.style.opacity = .6; btn.style.cursor = 'not-allowed'; }
+  btn.addEventListener('click', () => {
+    const res = toggleJoin(id);
+    if (res && res.full) { toast('Sorry — this one just filled up.'); return; }
+    const nowJoined = isJoined(getActivity(id));
+    toast(nowJoined ? "You're in! See you there. 🎉" : "No problem — you've left this activity.");
+    render();
+  });
+}
+function pageInit() { render(); }
+</script>
+</body>
+</html>
