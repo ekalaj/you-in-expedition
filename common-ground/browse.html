@@ -37,6 +37,9 @@
     <p>Find a friendly get-together and save your spot. New ones are added all the time.</p>
   </div>
 
+  <section id="recommended" aria-label="Recommended for you"></section>
+
+  <h2 id="all-head" style="margin:8px 0 20px">All activities</h2>
   <div class="toolbar">
     <div class="filters" id="filters" role="group" aria-label="Filter by activity type"></div>
     <a href="post.html" class="btn btn-accent">＋ Post an activity</a>
@@ -55,6 +58,7 @@
 
 <script src="js/data.js"></script>
 <script src="js/app.js"></script>
+<script src="js/recommend.js"></script>
 <script>
 let activeCat = qs('cat') || 'all';
 
@@ -118,7 +122,65 @@ function renderGrid() {
   grid.innerHTML = list.map(cardHTML).join('');
 }
 
-function pageInit() { renderFilters(); renderGrid(); }
+function recCardHTML(item) {
+  const a = item.a;
+  const cat = categoryById(a.category);
+  const spots = spotsLabel(a);
+  const joined = isJoined(a);
+  // show up to two strongest reasons
+  const order = { interest: 0, social: 1, distance: 2, time: 3 };
+  const reasons = item.reasons.slice().sort((x, y) => (order[x.k] ?? 9) - (order[y.k] ?? 9)).slice(0, 2);
+  const chips = reasons.map(r => `<span class="match-chip">${r.text}</span>`).join('');
+  return `
+  <article class="card">
+    <div class="banner ${cat.cls}">
+      <span class="ico" aria-hidden="true">${cat.icon}</span>
+      <span>${cat.name}</span>
+    </div>
+    <div class="body">
+      <h3>${a.title}</h3>
+      <div class="match-row">${chips}</div>
+      <ul class="meta">
+        <li><span class="mi" aria-hidden="true">📅</span> ${shortDate(a.date)} · ${a.time}</li>
+        <li><span class="mi" aria-hidden="true">📍</span> ${a.place}, ${a.area}</li>
+      </ul>
+      ${joined ? '<span class="badge joined">✓ You\'re going</span>' : ''}
+      <div class="foot">
+        <span class="spots ${spots.cls}">${spots.text}</span>
+        <a class="btn btn-primary" href="activity.html?id=${a.id}">View &amp; join</a>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderRecommended() {
+  const wrap = document.getElementById('recommended');
+  const me = getMember();
+
+  // Not signed in (or no interests yet) → gentle nudge instead of a rail.
+  if (!me || !me.interests || !me.interests.length) {
+    wrap.innerHTML = `
+      <div class="rec-prompt">
+        <div>
+          <strong>Want picks chosen just for you?</strong>
+          <p style="color:var(--muted);margin-top:4px">Tell us what you enjoy and we'll sort activities by what fits you best.</p>
+        </div>
+        <a class="btn btn-primary" href="signup.html">Get my recommendations</a>
+      </div>`;
+    return;
+  }
+
+  const picks = recommend(me, { limit: 6 });
+  if (!picks.length) { wrap.innerHTML = ''; return; }
+  wrap.innerHTML = `
+    <div class="rec-head">
+      <h2>Recommended for you</h2>
+      <span class="rec-sub">Based on your interests, neighborhood, and preferred times</span>
+    </div>
+    <div class="grid">${picks.map(recCardHTML).join('')}</div>`;
+}
+
+function pageInit() { renderRecommended(); renderFilters(); renderGrid(); }
 </script>
 </body>
 </html>

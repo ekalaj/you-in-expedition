@@ -260,6 +260,26 @@ section.block { padding: 56px 0; }
 .badge.joined { background: #DDEEE4; color: var(--green-d); }
 .badge.host { background: #FBEFD9; color: #8a5a12; }
 
+/* ============ RECOMMENDATIONS ============ */
+.rec-head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin: 8px 0 20px; }
+.rec-head h2 { margin: 0; }
+.rec-sub { color: var(--muted); font-size: 17px; }
+#recommended { margin-bottom: 40px; }
+#recommended:empty { display: none; }
+
+.match-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.match-chip {
+  display: inline-block; background: #EAF3EE; color: var(--green-d);
+  border: 1px solid #C7E0D2; border-radius: 999px;
+  padding: 5px 12px; font-size: 14px; font-weight: 700;
+}
+.rec-prompt {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  background: var(--soft); border: 1px solid var(--line-2); border-radius: var(--radius);
+  padding: 22px 26px;
+}
+.rec-prompt strong { font-size: 21px; }
+
 /* ============ DETAIL PAGE ============ */
 .detail-head {
   border-radius: 20px; color: #fff; padding: 40px;

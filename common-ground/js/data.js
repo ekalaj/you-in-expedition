@@ -20,6 +20,16 @@ function categoryById(id) {
   return CATEGORIES.find(c => c.id === id) || { id: 'other', name: 'Activity', icon: '📌', cls: 'c-default' };
 }
 
+/* Approximate neighborhood coordinates (lat/lng) used by the recommendation
+   algorithm to estimate distance. In the real app these come from geocoding
+   the meeting place; here we map our sample neighborhoods to fixed points.
+   Only neighborhood-level location is ever used — never an exact address. */
+const AREA_COORDS = {
+  'Oakdale':   { lat: 42.462, lng: -83.104 },
+  'Riverside': { lat: 42.411, lng: -83.162 },
+  'Greenfield':{ lat: 42.383, lng: -83.118 },
+};
+
 /* Sample activities. Dates are generated relative to "today" so the
    prototype always shows upcoming events. */
 const SEED_ACTIVITIES = [

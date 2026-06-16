@@ -54,9 +54,30 @@
     </div>
 
     <div class="field">
-      <label for="area">Your neighborhood or town</label>
+      <label for="area">Your neighborhood</label>
       <div class="hint">We'll show you activities close to home.</div>
-      <input id="area" name="area" type="text" placeholder="e.g. Oakdale">
+      <select id="area" name="area">
+        <option value="Oakdale">Oakdale</option>
+        <option value="Riverside">Riverside</option>
+        <option value="Greenfield">Greenfield</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>What do you enjoy?</label>
+      <div class="hint">Pick a few — this is how we find get-togethers you'll like.</div>
+      <div class="cat-picker" id="interestPicker" role="group" aria-label="Your interests"></div>
+    </div>
+
+    <div class="field">
+      <label>When do you like to meet?</label>
+      <div class="hint">We'll favor activities at times that suit you.</div>
+      <div class="filters" id="timePref" role="radiogroup" aria-label="Preferred time of day">
+        <button type="button" class="filter-pill" role="radio" aria-checked="false" data-time="morning">☀️ Mornings</button>
+        <button type="button" class="filter-pill" role="radio" aria-checked="false" data-time="afternoon">🌤️ Afternoons</button>
+        <button type="button" class="filter-pill" role="radio" aria-checked="false" data-time="evening">🌙 Evenings</button>
+        <button type="button" class="filter-pill active" role="radio" aria-checked="true" data-time="any">Any time</button>
+      </div>
     </div>
 
     <button type="submit" class="btn btn-primary btn-lg btn-block">Start free — no card needed</button>
@@ -78,22 +99,59 @@
 <script src="js/app.js"></script>
 <script>
 function pageInit() {
-  // Pre-fill if already signed in
   const me = getMember();
+  const selectedInterests = new Set(me && me.interests ? me.interests : []);
+  let timePref = (me && me.timePref) || 'any';
+
+  // Render interest picker (multi-select)
+  const picker = document.getElementById('interestPicker');
+  picker.innerHTML = CATEGORIES.map(c =>
+    `<button type="button" class="cat-option ${selectedInterests.has(c.id) ? 'selected' : ''}"
+        aria-pressed="${selectedInterests.has(c.id)}" data-cat="${c.id}">
+       <span class="ico" aria-hidden="true">${c.icon}</span>${c.name}
+     </button>`
+  ).join('');
+  picker.querySelectorAll('.cat-option').forEach(b => {
+    b.addEventListener('click', () => {
+      const id = b.dataset.cat;
+      if (selectedInterests.has(id)) { selectedInterests.delete(id); b.classList.remove('selected'); b.setAttribute('aria-pressed', 'false'); }
+      else { selectedInterests.add(id); b.classList.add('selected'); b.setAttribute('aria-pressed', 'true'); }
+    });
+  });
+
+  // Time preference (single-select)
+  const timeWrap = document.getElementById('timePref');
+  timeWrap.querySelectorAll('.filter-pill').forEach(b => {
+    b.classList.toggle('active', b.dataset.time === timePref);
+    b.setAttribute('aria-checked', b.dataset.time === timePref ? 'true' : 'false');
+    b.addEventListener('click', () => {
+      timePref = b.dataset.time;
+      timeWrap.querySelectorAll('.filter-pill').forEach(x => {
+        x.classList.toggle('active', x === b);
+        x.setAttribute('aria-checked', x === b ? 'true' : 'false');
+      });
+    });
+  });
+
+  // Pre-fill if already signed in
   if (me) {
     document.getElementById('name').value = me.name || '';
     document.getElementById('email').value = me.email || '';
-    document.getElementById('area').value = me.area || '';
+    if (me.area) document.getElementById('area').value = me.area;
   }
+
   document.getElementById('signupForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const f = e.target;
     if (!f.checkValidity()) { f.reportValidity(); return; }
+    if (selectedInterests.size === 0) { toast('Pick at least one thing you enjoy.'); picker.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
     const existing = getMember();
     setMember({
       name: f.name.value.trim(),
       email: f.email.value.trim(),
-      area: f.area.value.trim(),
+      area: f.area.value,
+      interests: Array.from(selectedInterests),
+      timePref: timePref,
       joined: existing && existing.joined ? existing.joined : new Date().toISOString(),
       trialDays: 30,
     });
