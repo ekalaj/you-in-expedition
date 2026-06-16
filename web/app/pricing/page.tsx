@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { isStripeConfigured } from "@/lib/stripe";
 
 export default function PricingPage() {
+  const billingOn = isStripeConfigured();
   return (
     <div className="wrap">
       <div className="page-head" style={{ textAlign: "center" }}>
@@ -33,11 +35,21 @@ export default function PricingPage() {
               <li>Reminders before your activities</li>
               <li>Cancel anytime — no fuss</li>
             </ul>
-            <form action="/api/stripe/checkout" method="post">
-              <button className="btn btn-primary btn-lg btn-block">Become a member</button>
-            </form>
+            {billingOn ? (
+              <form action="/api/stripe/checkout" method="post">
+                <button className="btn btn-primary btn-lg btn-block">Become a member</button>
+              </form>
+            ) : (
+              <Link href="/signup" className="btn btn-primary btn-lg btn-block">Start free</Link>
+            )}
           </div>
         </div>
+
+        {!billingOn && (
+          <p style={{ textAlign: "center", color: "var(--muted)", maxWidth: 620, margin: "28px auto 0", fontSize: 18 }}>
+            💛 We&apos;re in early access — everything is free for now. Paid membership turns on later.
+          </p>
+        )}
       </section>
     </div>
   );

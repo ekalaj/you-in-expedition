@@ -1,11 +1,17 @@
 import { NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
+import { getStripe, isStripeConfigured } from "@/lib/stripe";
 import { createClient } from "@/lib/supabase/server";
 
 // Starts a Stripe Checkout session for the $10/month membership.
 // The free trial is enforced by trial_ends_at in our DB; here we simply let the
 // member subscribe whenever they choose.
 export async function POST(request: Request) {
+  // Stripe is optional — if it isn't set up yet, send the member back gracefully.
+  if (!isStripeConfigured()) {
+    return NextResponse.redirect(new URL("/pricing?checkout=unavailable", request.url), { status: 303 });
+  }
+  const stripe = getStripe();
+
   const supabase = createClient();
   const {
     data: { user },

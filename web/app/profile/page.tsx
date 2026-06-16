@@ -5,6 +5,7 @@ import { CATEGORIES, categoryById } from "@/lib/categories";
 import { AREA_NAMES } from "@/lib/areas";
 import { ActivityCard } from "@/components/ActivityCard";
 import { updateProfile } from "./actions";
+import { isStripeConfigured } from "@/lib/stripe";
 import type { Profile, RankedActivity } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -53,6 +54,7 @@ export default async function ProfilePage() {
 
   const left = trialDaysLeft(me);
   const isMember = me.subscription_status === "active";
+  const billingOn = isStripeConfigured();
 
   return (
     <div className="wrap">
@@ -67,6 +69,10 @@ export default async function ProfilePage() {
       {isMember ? (
         <div className="notice" style={{ marginTop: 8 }}>
           <span aria-hidden="true">⭐</span><span>You&apos;re a <strong>member</strong>. Thanks for keeping the community going!</span>
+        </div>
+      ) : !billingOn ? (
+        <div className="notice" style={{ marginTop: 8 }}>
+          <span aria-hidden="true">💛</span><span>You&apos;re in <strong>early access</strong> — everything is free for now.</span>
         </div>
       ) : (
         <div className="notice" style={{ marginTop: 8, alignItems: "center", justifyContent: "space-between" }}>

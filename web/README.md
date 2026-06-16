@@ -61,14 +61,18 @@ supabase/
    ```
 
 3. **Configure env** — copy `.env.example` to `.env.local` and fill in:
-   - Supabase URL + anon key + service-role key
-   - Stripe secret key, webhook secret, and a $10/mo recurring Price ID
+   - Supabase URL + anon key + service-role key (required)
    - `NEXT_PUBLIC_SITE_URL`
+   - Stripe values are **optional** — leave them blank to skip payments.
 
-4. **Stripe**
+4. **Stripe (optional — skip to run free)**
+   Leave the `STRIPE_*` / `NEXT_PUBLIC_STRIPE_PRICE_ID` vars blank and the app
+   runs in "early access" mode (everything free, membership button hidden).
+   When you're ready to charge:
+   - Grab **test-mode** keys from dashboard.stripe.com → Developers → API keys.
    - Create a recurring **$10/month** Price; put its id in `NEXT_PUBLIC_STRIPE_PRICE_ID`.
-   - Add a webhook to `/(api)/api/stripe/webhook` for
-     `checkout.session.completed` and `customer.subscription.*`.
+   - Add a webhook to `/api/stripe/webhook` for `checkout.session.completed`
+     and `customer.subscription.*`.
    - Locally: `stripe listen --forward-to localhost:3000/api/stripe/webhook`.
 
 5. **Run**

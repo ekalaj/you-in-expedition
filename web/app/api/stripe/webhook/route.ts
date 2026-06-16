@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { SubscriptionStatus } from "@/lib/types";
 
 // Stripe webhook: keeps profiles.subscription_status in sync with Stripe.
 // Configure the endpoint in the Stripe dashboard and set STRIPE_WEBHOOK_SECRET.
 export async function POST(request: Request) {
+  // No-op if Stripe isn't configured yet.
+  if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
+    return new NextResponse("Stripe not configured", { status: 200 });
+  }
+  const stripe = getStripe();
+
   const body = await request.text();
   const sig = request.headers.get("stripe-signature");
   if (!sig) return new NextResponse("Missing signature", { status: 400 });
