@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post an Activity — Common Ground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <span class="logo" aria-hidden="true">◐</span>
+      <span>Common Ground<small>Close to home</small></span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
+    <nav class="nav-links" id="nav-links" aria-label="Main">
+      <a href="browse.html">Find Activities</a>
+      <a href="post.html" class="active">Post an Activity</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="signup.html" data-auth-slot>Sign in</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+
+  <div class="page-head">
+    <h1>Post an activity</h1>
+    <p>Hosting is easy. Fill in a few details and neighbors nearby can join you.</p>
+  </div>
+
+  <form class="form-card" id="postForm" novalidate>
+    <div class="notice">
+      <span aria-hidden="true">💡</span>
+      <span>Tip: a friendly title and a sentence about what to expect helps people feel welcome.</span>
+    </div>
+
+    <div class="field">
+      <label for="title">What's the activity?</label>
+      <div class="hint">For example: "Tuesday Dominoes Club" or "Morning Walk in the Park"</div>
+      <input id="title" name="title" type="text" required placeholder="Give it a friendly name">
+    </div>
+
+    <div class="field">
+      <label>Pick a category</label>
+      <div class="cat-picker" id="catPicker" role="radiogroup" aria-label="Category"></div>
+      <input type="hidden" id="category" name="category" required>
+    </div>
+
+    <div class="two-col">
+      <div class="field">
+        <label for="date">Date</label>
+        <input id="date" name="date" type="date" required>
+      </div>
+      <div class="field">
+        <label for="time">Time</label>
+        <input id="time" name="time" type="time" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="place">Where will you meet?</label>
+      <div class="hint">A café, community center, park, library — somewhere easy to find.</div>
+      <input id="place" name="place" type="text" required placeholder="Place name">
+    </div>
+
+    <div class="two-col">
+      <div class="field">
+        <label for="area">Neighborhood or town</label>
+        <input id="area" name="area" type="text" required placeholder="e.g. Oakdale">
+      </div>
+      <div class="field">
+        <label for="capacity">How many can join?</label>
+        <input id="capacity" name="capacity" type="number" min="2" max="50" value="8" required>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="description">Tell people what to expect</label>
+      <div class="hint">A warm sentence or two. Mention if beginners are welcome, if there's tea, etc.</div>
+      <textarea id="description" name="description" required placeholder="Write a short, friendly description..."></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg btn-block">Post this activity</button>
+    <p style="color:var(--muted);font-size:16px;margin-top:14px;text-align:center">You'll be listed as the host and the first one going.</p>
+  </form>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="copyright">© 2026 Common Ground (working name) · This is an early prototype.</div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+function pageInit() {
+  // category picker
+  const picker = document.getElementById('catPicker');
+  picker.innerHTML = CATEGORIES.map(c =>
+    `<button type="button" class="cat-option" role="radio" aria-checked="false" data-cat="${c.id}">
+       <span class="ico" aria-hidden="true">${c.icon}</span>${c.name}
+     </button>`
+  ).join('');
+  const hidden = document.getElementById('category');
+  picker.querySelectorAll('.cat-option').forEach(b => {
+    b.addEventListener('click', () => {
+      picker.querySelectorAll('.cat-option').forEach(x => { x.classList.remove('selected'); x.setAttribute('aria-checked','false'); });
+      b.classList.add('selected'); b.setAttribute('aria-checked','true');
+      hidden.value = b.dataset.cat;
+    });
+  });
+
+  // sensible default date = tomorrow
+  const d = new Date(); d.setDate(d.getDate() + 1);
+  document.getElementById('date').value = d.toISOString().slice(0, 10);
+
+  document.getElementById('postForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = e.target;
+    if (!hidden.value) { toast('Please pick a category.'); picker.scrollIntoView({behavior:'smooth', block:'center'}); return; }
+    if (!f.checkValidity()) { f.reportValidity(); return; }
+
+    // turn 24h time into a friendly label like "2:00 PM"
+    let timeLabel = f.time.value;
+    const [hh, mm] = f.time.value.split(':').map(Number);
+    if (!isNaN(hh)) {
+      const ap = hh < 12 ? 'AM' : 'PM';
+      const h12 = ((hh + 11) % 12) + 1;
+      timeLabel = `${h12}:${String(mm).padStart(2,'0')} ${ap}`;
+    }
+
+    const activity = addActivity({
+      title: f.title.value.trim(),
+      category: hidden.value,
+      date: new Date(f.date.value + 'T00:00:00').toISOString(),
+      time: timeLabel,
+      place: f.place.value.trim(),
+      area: f.area.value.trim(),
+      capacity: f.capacity.value,
+      description: f.description.value.trim(),
+    });
+    toast('Your activity is posted! 🎉');
+    setTimeout(() => { location.href = 'activity.html?id=' + activity.id; }, 700);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Activities — Common Ground</title>
+<meta name="description" content="Browse friendly local get-togethers near you and save your spot.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="index.html" class="brand">
+      <span class="logo" aria-hidden="true">◐</span>
+      <span>Common Ground<small>Close to home</small></span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">☰ Menu</button>
+    <nav class="nav-links" id="nav-links" aria-label="Main">
+      <a href="browse.html" class="active">Find Activities</a>
+      <a href="post.html">Post an Activity</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="signup.html" data-auth-slot>Sign in</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<div class="wrap">
+
+  <div class="page-head">
+    <h1>Activities near you</h1>
+    <p>Find a friendly get-together and save your spot. New ones are added all the time.</p>
+  </div>
+
+  <div class="toolbar">
+    <div class="filters" id="filters" role="group" aria-label="Filter by activity type"></div>
+    <a href="post.html" class="btn btn-accent">＋ Post an activity</a>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+</div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="copyright">© 2026 Common Ground (working name) · This is an early prototype.</div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+let activeCat = qs('cat') || 'all';
+
+function renderFilters() {
+  const el = document.getElementById('filters');
+  const cats = [{ id: 'all', name: 'All', icon: '✨' }].concat(CATEGORIES);
+  el.innerHTML = cats.map(c =>
+    `<button class="filter-pill ${c.id === activeCat ? 'active' : ''}" data-cat="${c.id}">
+       <span aria-hidden="true">${c.icon}</span> ${c.name}
+     </button>`
+  ).join('');
+  el.querySelectorAll('.filter-pill').forEach(b => {
+    b.addEventListener('click', () => {
+      activeCat = b.dataset.cat;
+      const u = new URL(location);
+      if (activeCat === 'all') u.searchParams.delete('cat'); else u.searchParams.set('cat', activeCat);
+      history.replaceState({}, '', u);
+      renderFilters(); renderGrid();
+    });
+  });
+}
+
+function cardHTML(a) {
+  const cat = categoryById(a.category);
+  const spots = spotsLabel(a);
+  const joined = isJoined(a);
+  return `
+  <article class="card">
+    <div class="banner ${cat.cls}">
+      <span class="ico" aria-hidden="true">${cat.icon}</span>
+      <span>${cat.name}</span>
+    </div>
+    <div class="body">
+      <h3>${a.title}</h3>
+      <ul class="meta">
+        <li><span class="mi" aria-hidden="true">📅</span> ${shortDate(a.date)} · ${a.time}</li>
+        <li><span class="mi" aria-hidden="true">📍</span> ${a.place}, ${a.area}</li>
+        <li><span class="mi" aria-hidden="true">👤</span> Hosted by ${a.host}</li>
+      </ul>
+      ${joined ? '<span class="badge joined">✓ You\'re going</span>' : ''}
+      <div class="foot">
+        <span class="spots ${spots.cls}">${spots.text}</span>
+        <a class="btn btn-outline" href="activity.html?id=${a.id}">View &amp; join</a>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  let list = getActivities();
+  if (activeCat !== 'all') list = list.filter(a => a.category === activeCat);
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1">
+      <div class="big">🔍</div>
+      <p>No activities in this category just yet.</p>
+      <p style="margin-top:14px"><a class="btn btn-primary" href="post.html">Be the first to post one</a></p>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = list.map(cardHTML).join('');
+}
+
+function pageInit() { renderFilters(); renderGrid(); }
+</script>
+</body>
+</html>
