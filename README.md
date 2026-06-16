@@ -51,20 +51,24 @@ python3 -m http.server 8000
 | File | Purpose |
 |------|---------|
 | `index.html` | Landing page: value prop, how it works, categories, pricing CTA |
-| `browse.html` | Activity listings with category filters |
+| `browse.html` | Activity listings + "Recommended for you" rail |
 | `activity.html` | Single activity detail + join/leave |
 | `post.html` | Form to host a new activity |
-| `signup.html` | Simulated free-trial sign-up |
-| `profile.html` | "My Activities" + trial status |
+| `signup.html` | Simulated free-trial sign-up (captures interests + time preference) |
+| `profile.html` | "My Activities", trial status, your interests |
 | `pricing.html` | Free trial → $10/month |
 | `css/styles.css` | Shared design system |
-| `js/data.js` | Categories + sample activities |
+| `js/data.js` | Categories, neighborhood coords + sample activities |
 | `js/app.js` | Storage, join/post logic, helpers |
+| `js/recommend.js` | Activity ranking / matching algorithm |
+| `ALGORITHM.md` | Matching algorithm spec + production (PostGIS/SQL) mapping |
 
 ## Suggested next steps toward a real product
 
+Recommended stack: **Next.js (PWA) · Supabase (Postgres + PostGIS + Auth) · Stripe · Resend/Twilio**, deployed on **Vercel + Supabase**.
+
 1. **Backend & accounts** — real sign-up/sign-in, a database for activities and RSVPs.
-2. **Location search** — find activities by distance / postcode, with a map.
+2. **Location search** — find activities by distance with PostGIS (`ST_DWithin`) and a map; port the ranking in `js/recommend.js` into a SQL `ORDER BY score` (see `ALGORITHM.md`).
 3. **Payments** — Stripe subscription for the $10/month plan after the trial (30 or 90 days).
 4. **Reminders** — email/text reminders before an activity (great for the target audience).
 5. **Safety & trust** — reporting, host verification, community guidelines.
