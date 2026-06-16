@@ -96,7 +96,6 @@ function render() {
           <button id="joinBtn" class="btn btn-block ${joined ? 'btn-outline' : 'btn-primary'} btn-lg">
             ${joined ? '✓ You\'re going — tap to cancel' : (full ? 'This activity is full' : 'Join this activity')}
           </button>
-          ${full && !joined ? '' : ''}
           <p style="color:var(--muted);font-size:16px;margin-top:14px;text-align:center">Free to join while you're a member.</p>
         </div>
       </aside>
