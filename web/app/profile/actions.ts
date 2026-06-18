@@ -30,4 +30,6 @@ export async function updateProfile(formData: FormData) {
 
   revalidatePath("/profile");
   revalidatePath("/browse");
+  // Send the member back with a flag so the page can show a "Saved!" confirmation.
+  redirect("/profile?saved=1");
 }

@@ -18,7 +18,7 @@ function initials(name: string) {
   return name.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
 }
 
-export default async function ProfilePage() {
+export default async function ProfilePage({ searchParams }: { searchParams: { saved?: string } }) {
   const supabase = createClient();
   const {
     data: { user },
@@ -65,6 +65,12 @@ export default async function ProfilePage() {
           <p style={{ margin: 0 }}>{me.area ? `📍 ${me.area}` : "Welcome back"}</p>
         </div>
       </div>
+
+      {searchParams?.saved && (
+        <div className="notice" style={{ marginTop: 8, background: "#DDEEE4", borderColor: "#BcdCC9", color: "var(--green-d)" }}>
+          <span aria-hidden="true">✓</span><span><strong>Saved!</strong> Your preferences are up to date.</span>
+        </div>
+      )}
 
       {isMember ? (
         <div className="notice" style={{ marginTop: 8 }}>
