@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { categoryById } from "@/lib/categories";
-import { toggleJoin } from "../actions";
+import { toggleJoin, reportActivity } from "../actions";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +10,13 @@ function initials(name: string) {
   return name.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
 }
 
-export default async function ActivityPage({ params }: { params: { id: string } }) {
+export default async function ActivityPage({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { reported?: string; report?: string };
+}) {
   const supabase = createClient();
   const {
     data: { user },
@@ -42,10 +48,18 @@ export default async function ActivityPage({ params }: { params: { id: string } 
   const spotsText = full ? "Full" : `${left} spot${left === 1 ? "" : "s"} left`;
 
   const join = toggleJoin.bind(null, activity.id);
+  const report = reportActivity.bind(null, activity.id);
 
   return (
     <div className="wrap">
       <p className="breadcrumb"><Link href="/browse">← Back to all activities</Link></p>
+
+      {searchParams?.reported && (
+        <div className="notice" style={{ marginTop: 8 }}>
+          <span aria-hidden="true">✓</span>
+          <span><strong>Thank you.</strong> Your report has been sent to our team — we take these seriously.</span>
+        </div>
+      )}
 
       <div className={`detail-head ${cat.cls}`}>
         <span className="ico" aria-hidden="true">{cat.icon}</span>
@@ -103,6 +117,40 @@ export default async function ActivityPage({ params }: { params: { id: string } 
           </div>
         </aside>
       </div>
+
+      {user && (
+        <details style={{ maxWidth: 760, margin: "44px auto 0", borderTop: "1px solid var(--line)", paddingTop: 20 }}>
+          <summary style={{ cursor: "pointer", fontWeight: 700, color: "var(--muted)" }}>
+            Report a problem with this activity
+          </summary>
+          {searchParams?.report === "missing" && (
+            <div className="notice" style={{ marginTop: 14, background: "#FBEAE6", borderColor: "#E6B9AE", color: "var(--terra-d)" }}>
+              <span aria-hidden="true">⚠️</span><span>Please choose a reason before sending.</span>
+            </div>
+          )}
+          <form action={report} className="form-card" style={{ marginTop: 16, boxShadow: "none" }}>
+            <div className="field">
+              <label htmlFor="reason">What&apos;s the problem?</label>
+              <select id="reason" name="reason" required defaultValue="">
+                <option value="" disabled>Choose a reason…</option>
+                <option>It seems like spam or a scam</option>
+                <option>It doesn&apos;t seem real</option>
+                <option>Inappropriate or offensive</option>
+                <option>A safety concern</option>
+                <option>Something else</option>
+              </select>
+            </div>
+            <div className="field">
+              <label htmlFor="details">Anything you&apos;d like to add? (optional)</label>
+              <textarea id="details" name="details" placeholder="Tell us what happened…" />
+            </div>
+            <button type="submit" className="btn btn-outline">Send report</button>
+            <p style={{ color: "var(--muted)", fontSize: 15, marginTop: 10 }}>
+              Reports are private and reviewed by our team.
+            </p>
+          </form>
+        </details>
+      )}
     </div>
   );
 }
